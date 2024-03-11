@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.Models;
 
@@ -15,11 +16,26 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        // Criar um objeto com o nome pokemons do tipo Lista de Pokemon
+        List<Pokemon> pokemons = [];
+        using (StreamReader leitor = new("Data\\pokemons.json"))
+        {
+            string dados = leitor.ReadToEnd();
+            pokemons = JsonSerializer.Deserialize<List<Pokemon>>(dados);
+        }
+        List<Tipo> tipos = [];
+        using (StreamReader leitor = new("Data\\tipos.json"))
+        {
+            string dados = leitor.ReadToEnd();
+            tipos = JsonSerializer.Deserialize<List<Tipo>>(dados);
+        }
+        ViewData["Tipos"] = tipos;
+        return View(pokemons);
     }
 
-    public IActionResult Privacy()
+    public IActionResult Details(int id)
     {
+        
         return View();
     }
 
